@@ -1,0 +1,6 @@
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "plugin": [
+    "./_vendor/baicai-vibe/plugins/chat-manager.ts"
+  ]
+}

@@ -17,7 +17,7 @@
 Dependency resolution rule:
 
 - `baicai-vibe-coding` may depend on the `baicai-vibe` package
-- shared artifacts must be materialized into `@.opencode/_vendor/baicai-vibe/`
+- shared artifacts must be materialized into `@.opencode/{commands,workflows,rules,skills,agents,plugins}/baicai-vibe/`
 - runtime markdown references must target only local project files
 
 ## Split Rule

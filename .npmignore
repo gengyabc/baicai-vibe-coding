@@ -1,0 +1,11 @@
+.opencode/node_modules/
+.opencode/.DS_Store
+.opencode/opencode.json
+.DS_Store
+.github/
+docs/
+.git/
+bin/__tests__/
+*.md
+!README.md
+!AGENTS.md

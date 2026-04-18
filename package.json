@@ -1,0 +1,50 @@
+{
+  "name": "baicai-vc",
+  "version": "0.1.0",
+  "description": "OpenCode artifacts for Vibe Coding methodology - agents, commands, rules, skills, and workflows. Note: baicai-vibe dependency is not yet published to npm - install from GitHub.",
+  "license": "MIT",
+  "dependencies": {
+    "baicai-vibe": "github:gengyabc/baicai-vibe#main"
+  },
+  "devDependencies": {},
+  "files": [
+    ".opencode/agents/baicai-vc/",
+    ".opencode/commands/baicai-vc/",
+    ".opencode/rules/baicai-vc/",
+    ".opencode/skills/baicai-vc/",
+    ".opencode/workflows/baicai-vc/",
+    "!.opencode/opencode.json",
+    "bin/install-utils.js",
+    "bin/link.js",
+    "bin/owned-paths.js",
+    "bin/postinstall.js",
+    "bin/preuninstall.js",
+    "bin/unlink.js",
+    "!bin/__tests__",
+    "!bin/__tests__/**/*",
+    "README.md",
+    "AGENTS.md"
+  ],
+  "bin": {
+    "baicai-vc-link": "bin/link.js",
+    "baicai-vc-unlink": "bin/unlink.js"
+  },
+  "scripts": {
+    "postinstall": "node bin/postinstall.js",
+    "preuninstall": "node bin/preuninstall.js",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "test:coverage": "bun test --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gengyabc/baicai-vibe-coding"
+  },
+  "keywords": [
+    "opencode",
+    "ai",
+    "coding",
+    "agents",
+    "vibe-coding"
+  ]
+}

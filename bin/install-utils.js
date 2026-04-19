@@ -2,13 +2,24 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const { execSync } = require('child_process');
 const ownedPaths = require('./owned-paths');
 
-const syncExcludes = ['node_modules', '.DS_Store', '.gitignore', 'package-lock.json', 'opencode.json', '.venv', '__pycache__'];
+const syncExcludes = [
+  'node_modules',
+  '.DS_Store',
+  '.gitignore',
+  'package.json',
+  'package-lock.json',
+  'bun.lock',
+  'bun.lockb',
+  'pnpm-lock.yaml',
+  'yarn.lock',
+  'opencode.json',
+  '.venv',
+  '__pycache__',
+];
 const LOCK_POLL_MS = 100;
 const LOCK_TIMEOUT_MS = 30000;
-const INSTALL_TIMEOUT_MS = 300000;
 
 function resolvePkgDir() {
   return path.resolve(__dirname, '..');
@@ -177,7 +188,7 @@ function syncDir(src, dest, exclude = syncExcludes) {
 
   for (const entry of fs.readdirSync(src)) {
     if (exclude.includes(entry)) continue;
-    if (entry.endsWith('.lock') && entry !== 'bun.lockb' && entry !== 'bun.lock') continue;
+    if (entry.endsWith('.lock')) continue;
 
     const srcPath = path.join(src, entry);
     const destPath = path.join(dest, entry);
@@ -222,25 +233,6 @@ function hasBaicaiVcContent(dir, paths = ownedPaths) {
   return paths.some(rel => fs.existsSync(path.join(dir, rel)));
 }
 
-function runInstall(dir, installer = execSync) {
-  const packageJsonPath = path.join(dir, 'package.json');
-  if (!fs.existsSync(packageJsonPath)) return false;
-
-  const pm = fs.existsSync(path.join(dir, 'bun.lockb')) ? 'bun' : 'npm';
-
-  try {
-    installer(`${pm} install`, {
-      cwd: dir,
-      stdio: 'inherit',
-      timeout: INSTALL_TIMEOUT_MS,
-    });
-    return true;
-  } catch (err) {
-    console.error(`Failed to run ${pm} install in ${dir}:`, err.message);
-    return false;
-  }
-}
-
 module.exports = {
   resolvePkgDir,
   resolveProjectRoot,
@@ -258,5 +250,4 @@ module.exports = {
   syncDir,
   removeOwnedContent,
   hasBaicaiVcContent,
-  runInstall,
 };

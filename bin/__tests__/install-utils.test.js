@@ -258,15 +258,15 @@ describe('removeOwnedContent', () => {
     expect(fs.existsSync(path.join(tempDir, 'commands/baicai-vc'))).toBe(false);
   });
 
-  test('removes root owned files', () => {
-    const testPaths = ['package.json', 'bun.lock'];
+  test('preserves root package files', () => {
+    const testPaths = ['agents/baicai-vc'];
     fs.writeFileSync(path.join(tempDir, 'package.json'), '{}');
     fs.writeFileSync(path.join(tempDir, 'bun.lock'), 'lock');
 
     utils.removeOwnedContent(tempDir, testPaths);
 
-    expect(fs.existsSync(path.join(tempDir, 'package.json'))).toBe(false);
-    expect(fs.existsSync(path.join(tempDir, 'bun.lock'))).toBe(false);
+    expect(fs.existsSync(path.join(tempDir, 'package.json'))).toBe(true);
+    expect(fs.existsSync(path.join(tempDir, 'bun.lock'))).toBe(true);
   });
 
   test('does not remove non-owned paths', () => {
@@ -467,52 +467,5 @@ describe('prompt', () => {
     const result = await utils.prompt('Question?');
     expect(result).toBe('yes');
     delete process.env.BAICAI_VC_FORCE;
-  });
-});
-
-describe('runInstall', () => {
-  test('returns false when no package.json exists', () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'baicai-vc-test-'));
-    const result = utils.runInstall(tempDir, () => {});
-    expect(result).toBe(false);
-    fs.rmSync(tempDir, { recursive: true, force: true });
-  });
-
-  test('uses bun when bun.lockb exists', () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'baicai-vc-test-'));
-    fs.writeFileSync(path.join(tempDir, 'package.json'), '{}');
-    fs.writeFileSync(path.join(tempDir, 'bun.lockb'), '');
-
-    let calledWith = null;
-    const mockExec = (cmd) => { calledWith = cmd; };
-
-    utils.runInstall(tempDir, mockExec);
-    expect(calledWith).toContain('bun install');
-
-    fs.rmSync(tempDir, { recursive: true, force: true });
-  });
-
-  test('uses npm when bun.lockb does not exist', () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'baicai-vc-test-'));
-    fs.writeFileSync(path.join(tempDir, 'package.json'), '{}');
-
-    let calledWith = null;
-    const mockExec = (cmd) => { calledWith = cmd; };
-
-    utils.runInstall(tempDir, mockExec);
-    expect(calledWith).toContain('npm install');
-
-    fs.rmSync(tempDir, { recursive: true, force: true });
-  });
-
-  test('returns false when install fails', () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'baicai-vc-test-'));
-    fs.writeFileSync(path.join(tempDir, 'package.json'), '{}');
-
-    const mockExec = () => { throw new Error('Install failed'); };
-    const result = utils.runInstall(tempDir, mockExec);
-    expect(result).toBe(false);
-
-    fs.rmSync(tempDir, { recursive: true, force: true });
   });
 });

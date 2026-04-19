@@ -43,12 +43,6 @@ async function main() {
     utils.removeOwnedContent(targetDir, ownedPaths);
     utils.syncDir(sourceDir, targetDir);
 
-    const installOk = utils.runInstall(targetDir);
-    if (!installOk) {
-      console.error('Error: dependency install failed');
-      process.exit(1);
-    }
-
     console.log(`✓ baicai-vc installed to ${targetDir}`);
   } finally {
     utils.releaseLock(lockPath);

@@ -258,6 +258,17 @@ describe('removeOwnedContent', () => {
     expect(fs.existsSync(path.join(tempDir, 'commands/baicai-vc'))).toBe(false);
   });
 
+  test('removes root owned files', () => {
+    const testPaths = ['package.json', 'bun.lock'];
+    fs.writeFileSync(path.join(tempDir, 'package.json'), '{}');
+    fs.writeFileSync(path.join(tempDir, 'bun.lock'), 'lock');
+
+    utils.removeOwnedContent(tempDir, testPaths);
+
+    expect(fs.existsSync(path.join(tempDir, 'package.json'))).toBe(false);
+    expect(fs.existsSync(path.join(tempDir, 'bun.lock'))).toBe(false);
+  });
+
   test('does not remove non-owned paths', () => {
     const testPaths = ['agents/baicai-vc'];
     fs.mkdirSync(path.join(tempDir, 'agents/baicai-vc'), { recursive: true });

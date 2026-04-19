@@ -117,10 +117,14 @@ describe('integration tests', () => {
     
     utils.syncDir(srcDir, opencodeDir);
     
+    expect(fs.existsSync(path.join(opencodeDir, 'package.json'))).toBe(true);
+    expect(fs.existsSync(path.join(opencodeDir, 'bun.lock'))).toBe(true);
     expect(fs.existsSync(path.join(opencodeDir, 'agents/baicai-vc'))).toBe(true);
     expect(fs.existsSync(path.join(opencodeDir, 'commands/baicai-vc'))).toBe(true);
     
     utils.removeOwnedContent(opencodeDir, ownedPaths);
+    expect(fs.existsSync(path.join(opencodeDir, 'package.json'))).toBe(false);
+    expect(fs.existsSync(path.join(opencodeDir, 'bun.lock'))).toBe(false);
     expect(fs.existsSync(path.join(opencodeDir, 'agents/baicai-vc'))).toBe(false);
     
     fs.rmSync(projectDir, { recursive: true, force: true });

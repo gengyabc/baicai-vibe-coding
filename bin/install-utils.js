@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const { execSync } = require('child_process');
 const ownedPaths = require('./owned-paths');
 
-const syncExcludes = ['node_modules', '.DS_Store', '.gitignore', 'package-lock.json', 'opencode.json'];
+const syncExcludes = ['node_modules', '.DS_Store', '.gitignore', 'package-lock.json', 'opencode.json', '.venv', '__pycache__'];
 const LOCK_POLL_MS = 100;
 const LOCK_TIMEOUT_MS = 30000;
 const INSTALL_TIMEOUT_MS = 300000;
@@ -177,16 +177,16 @@ function syncDir(src, dest, exclude = syncExcludes) {
 
   for (const entry of fs.readdirSync(src)) {
     if (exclude.includes(entry)) continue;
+    if (entry.endsWith('.lock') && entry !== 'bun.lockb' && entry !== 'bun.lock') continue;
 
     const srcPath = path.join(src, entry);
     const destPath = path.join(dest, entry);
-    const stat = fs.lstatSync(srcPath);
 
-    if (stat.isSymbolicLink()) {
+    if (fs.lstatSync(srcPath).isSymbolicLink()) {
       continue;
     }
 
-    if (stat.isDirectory()) {
+    if (fs.statSync(srcPath).isDirectory()) {
       syncDir(srcPath, destPath, exclude);
     } else if (filesAreDifferent(srcPath, destPath)) {
       fs.copyFileSync(srcPath, destPath);

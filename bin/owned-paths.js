@@ -2,6 +2,8 @@
 // Used by postinstall/preuninstall to track what we install/remove
 // Includes both baicai-vc and its dependency baicai-vibe
 module.exports = [
+  'package.json',
+  'bun.lock',
   'agents/baicai-vc',
   'commands/baicai-vc',
   'rules/baicai-vc',
